@@ -1,0 +1,10 @@
+# Ignorar a pasta .idea do IntelliJ
+.idea/
+
+# Ignorar arquivos de compilação
+*.class
+
+# Ignorar arquivos temporários de sistemas operacionais
+Thumbs.db
+.DS_Store
+
