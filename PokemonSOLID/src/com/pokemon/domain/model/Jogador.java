@@ -40,7 +40,12 @@ public class Jogador {
     }
 
     public void removerItem(String nomeItem) {
-        itens.removerItem(nomeItem);
+        for (int i = 0; i < itens.getItens().size(); i++) {
+            if (itens.getItens().get(i).getNome().equalsIgnoreCase(nomeItem)) {
+                itens.getItens().remove(i);
+                return; // Sai do loop após remover apenas um item
+            }
+        }
     }
 
     public Pokemon getPokemon() {

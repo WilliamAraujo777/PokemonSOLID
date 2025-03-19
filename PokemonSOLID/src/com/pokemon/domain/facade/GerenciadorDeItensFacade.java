@@ -38,8 +38,8 @@ public class GerenciadorDeItensFacade {
                 jogador.adicionarItem(tipoItem);
                 System.out.println("Item " + tipoItem + " adicionado!");
             } else {
-                System.out.println("Escolha inválida, tente novamente.");
-                i--; // Repete a iteração atual
+                System.out.println("Escolha invalida, tente novamente.");
+                i--;
             }
         }
     }

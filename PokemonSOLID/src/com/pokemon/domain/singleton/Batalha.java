@@ -1,6 +1,7 @@
 package com.pokemon.domain.singleton;
 
 import com.pokemon.domain.facade.GerenciadorDeItensFacade;
+import com.pokemon.domain.facade.GerenciadorJogadoresFacade;
 import com.pokemon.domain.model.Jogador;
 import com.pokemon.domain.strategy.*;
 
@@ -25,7 +26,8 @@ public class Batalha {
 
     public static Batalha iniciarBatalha(Jogador jogador1, Jogador jogador2) {
         if (instancia == null) {
-            instancia = new Batalha(jogador1, jogador2);
+            GerenciadorJogadoresFacade ger = new GerenciadorJogadoresFacade();
+            instancia = new Batalha(ger.criarJogador(1), ger.criarJogador(2));
         } else {
             System.out.println("Já existe uma batalha em andamento!");
         }
@@ -66,26 +68,34 @@ public class Batalha {
 
 
     private void turno(Jogador atacante, Jogador defensor) {
-        System.out.println("\nEstado Atual dos Pokémon:");
+        System.out.println("\n══════════════════════════════");
+        System.out.println("🌟 ESTADO ATUAL DOS POKÉMON 🌟");
+        System.out.println("══════════════════════════════\n");
+
+        System.out.println("🔵 " + atacante.getNome() + " - Pokémon Ativo:");
         System.out.println(atacante.getPokemon());
         System.out.println(atacante.getPokemon().contadorEspecial());
+
         System.out.println("\n🔽 VS 🔽\n");
+
+        System.out.println("🔴 " + defensor.getNome() + " - Pokémon Adversário:");
         System.out.println(defensor.getPokemon());
         System.out.println(defensor.getPokemon().contadorEspecial());
 
-        System.out.println("\nTurno de " + atacante.getNome() + "!");
+        System.out.println("\n══════════════════════════════");
+        System.out.println("🎮 Turno de " + atacante.getNome() + "!");
+        System.out.println("══════════════════════════════\n");
 
+        System.out.println("🎒 Itens disponíveis:");
+        atacante.exibirItens();
 
         boolean passarTurno = false;
 
-        System.out.println("\nSeus Itens: ");
-        atacante.exibirItens();
-
         while (!passarTurno) {
             System.out.println("\nEscolha uma ação:");
-            System.out.println("1 - Ataque Básico");
-            System.out.println("2 - Ataque Especial");
-            System.out.println("3 - Usar Item");
+            System.out.println("1️⃣ - Ataque Básico ⚔️");
+            System.out.println("2️⃣ - Ataque Especial 🌟");
+            System.out.println("3️⃣ - Usar Item 🎒");
             int escolha = scanner.nextInt();
             switch (escolha) {
                 case 1:
@@ -116,8 +126,13 @@ public class Batalha {
 
 
     private boolean verificarVencedor() {
-        if (finalizada) {
-            System.out.println("\nBatalha encerrada! " + (jogador1.getPokemon().getHp() <= 0 ? jogador2.getNome() : jogador1.getNome()) + " venceu!");
+        if (jogador1.getPokemon().getHp() <= 0) {
+            System.out.println("\nBatalha encerrada! " + jogador2.getNome() + " venceu!");
+            finalizada = true;
+            return true;
+        } else if (jogador2.getPokemon().getHp() <= 0) {
+            System.out.println("\nBatalha encerrada! " + jogador1.getNome() + " venceu!");
+            finalizada = true;
             return true;
         }
         return false;

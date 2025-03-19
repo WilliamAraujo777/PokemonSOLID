@@ -148,7 +148,7 @@ public class Pokemon {
     }
     @Override
     public String toString() {
-        return String.format("Pokémon: %s\nHP: %d\nAtaque: %d\nDefesa: %d\nAtaque Especial: %d\nHabilidade Especial: %s",
+        return String.format("Pokémon: %s\nHP: %d\nAtaque: %d - Defesa: %d\nAtaque Especial: %d - Habilidade Especial: %s",
                 nome, hp, ataque, defesa, ataqueEspecial, pokemonAtivo.getNomeEspecial());
     }
 
