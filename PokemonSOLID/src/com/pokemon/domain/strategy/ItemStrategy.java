@@ -3,5 +3,7 @@ package com.pokemon.domain.strategy;
 import com.pokemon.domain.model.Pokemon;
 
 public interface ItemStrategy {
-    void usar(Pokemon pokemon);
+    String getNome();
+
+    boolean usar(Pokemon pokemon);
 }

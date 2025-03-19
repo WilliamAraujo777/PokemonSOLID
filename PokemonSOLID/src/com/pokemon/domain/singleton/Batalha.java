@@ -1,15 +1,20 @@
 package com.pokemon.domain.singleton;
 
+import com.pokemon.domain.facade.GerenciadorDeItensFacade;
 import com.pokemon.domain.model.Jogador;
+import com.pokemon.domain.strategy.*;
 
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Batalha {
     private static Batalha instancia; // Única instância da batalha
-    private Jogador jogador1;
-    private Jogador jogador2;
+    private Jogador jogador1,jogador2;
     private boolean finalizada;
+
+    private GerenciadorDeItensFacade gerenciadorItens = new GerenciadorDeItensFacade();
+
     private Scanner scanner = new Scanner(System.in);
 
     private Batalha(Jogador jogador1, Jogador jogador2) {
@@ -22,7 +27,7 @@ public class Batalha {
         if (instancia == null) {
             instancia = new Batalha(jogador1, jogador2);
         } else {
-            System.out.println("⚠️ Já existe uma batalha em andamento!");
+            System.out.println("Já existe uma batalha em andamento!");
         }
         return instancia;
     }
@@ -33,9 +38,14 @@ public class Batalha {
 
     public void iniciar() {
         if (finalizada) {
-            System.out.println("⚠️ Essa batalha já terminou!");
+            System.out.println("Essa batalha já terminou!");
             return;
         }
+
+        List<ItemStrategy> opcoesItens = List.of(new HpPotion(), new RareCandy(), new AttackPotion(), new DefensePotion());
+
+        gerenciadorItens.distribuirItensIniciais(jogador1, opcoesItens);
+        gerenciadorItens.distribuirItensIniciais(jogador2, opcoesItens);
 
         System.out.println("Iniciando batalha entre " + jogador1.getNome() + " e " + jogador2.getNome() + "!");
 
@@ -45,10 +55,15 @@ public class Batalha {
 
             turno(jogador2, jogador1);
             if (verificarVencedor()) break;
+
+            gerenciadorItens.avancarTurno();
+            gerenciadorItens.verificarDistribuicaoDeItem(jogador1, opcoesItens);
+            gerenciadorItens.verificarDistribuicaoDeItem(jogador2, opcoesItens);
         }
 
         resetarBatalha();
     }
+
 
     private void turno(Jogador atacante, Jogador defensor) {
         System.out.println("\nEstado Atual dos Pokémon:");
@@ -60,12 +75,19 @@ public class Batalha {
 
         System.out.println("\nTurno de " + atacante.getNome() + "!");
 
-        int escolha = scanner.nextInt();
 
         boolean passarTurno = false;
 
-        while(!passarTurno){
-            switch(escolha){
+        System.out.println("\nSeus Itens: ");
+        atacante.exibirItens();
+
+        while (!passarTurno) {
+            System.out.println("\nEscolha uma ação:");
+            System.out.println("1 - Ataque Básico");
+            System.out.println("2 - Ataque Especial");
+            System.out.println("3 - Usar Item");
+            int escolha = scanner.nextInt();
+            switch (escolha) {
                 case 1:
                     atacante.getPokemon().ataqueBasico(defensor.getPokemon());
                     passarTurno = true;
@@ -75,14 +97,23 @@ public class Batalha {
                     passarTurno = true;
                     break;
                 case 3:
-                    //usarItem(atacante);
+                    System.out.println("Digite o nome do item que deseja usar:");
+                    String nomeItem = scanner.next();
+                    if (atacante.usarItem(nomeItem)) {
+                        atacante.removerItem(nomeItem);
+                        System.out.println("Item " + nomeItem + " usado e removido do deck!");
+                    } else {
+                        System.out.println("Não foi possível usar o item.");
+                    }
                     passarTurno = true;
                     break;
                 default:
                     System.out.println("Opção inválida! Perdeu a vez.");
+                    passarTurno = true;
             }
         }
     }
+
 
     private boolean verificarVencedor() {
         if (finalizada) {

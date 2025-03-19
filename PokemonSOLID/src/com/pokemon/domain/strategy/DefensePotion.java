@@ -2,14 +2,14 @@ package com.pokemon.domain.strategy;
 
 import com.pokemon.domain.model.Pokemon;
 
-public class RareCandy implements ItemStrategy {
+public class DefensePotion implements ItemStrategy{
     @Override
     public String getNome() {
-        return "RareCandy";
+        return "DefensePotion";
     }
 
     @Override
     public boolean usar(Pokemon pokemon) {
-        return pokemon.evoluir();
+        return pokemon.ativarBuffDefesa(20);
     }
 }

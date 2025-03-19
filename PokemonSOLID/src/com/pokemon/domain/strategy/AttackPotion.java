@@ -4,7 +4,12 @@ import com.pokemon.domain.model.Pokemon;
 
 public class AttackPotion implements ItemStrategy {
     @Override
-    public void usar(Pokemon pokemon) {
+    public String getNome() {
+        return "AttackPotion";
+    }
 
+    @Override
+    public boolean usar(Pokemon pokemon) {
+        return pokemon.ativarBuffAtaque(20);
     }
 }
